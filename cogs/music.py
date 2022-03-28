@@ -6,17 +6,17 @@ class music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
-    @commands.command()
+    @commands.command(name='join', description='racccon joins the voice channel youre in')
     async def join(self, ctx):
         await ctx.author.voice.channel.connect()
 
-    @commands.command(aliases=['disconnect'])
+    @commands.command(aliases=['disconnect'], name='leave', description='disconnect from voice channel')
     async def leave(self, ctx):
         vc = wavelink.Player = ctx.voice_client
         await vc.stop()
         await vc.disconnect()
 
-    @commands.command()
+    @commands.command(name='play', description='plays music (only supports youtube at the moment)')
     async def play(self, ctx, search: wavelink.YouTubeTrack):
         if not ctx.voice_client:
             vc: wavelink.Player = await ctx.author.voice.channel.connect(cls=wavelink.Player)
@@ -26,7 +26,7 @@ class music(commands.Cog):
             await vc.play(search)
             await ctx.send(f"Now Playing: `{search.title}`")
     
-    @commands.command()
+    @commands.command(name='pause', description='pauses current song playing')
     async def pause(self, ctx):
         if not ctx.voice_client:
             await ctx.send("You're not playing any music!")
@@ -38,7 +38,7 @@ class music(commands.Cog):
         await vc.pause()
         await ctx.send("`Paused.`")
 
-    @commands.command()
+    @commands.command(name='resume', description='resumes paused music')
     async def resume(self, ctx):
         if not ctx.voice_client:
             await ctx.send("You're not playing any music!")
@@ -50,7 +50,7 @@ class music(commands.Cog):
         await vc.resume()
         await ctx.send("`Resumed your music!.`")
     
-    @commands.command()
+    @commands.command(name='stop', description='stops music currently playing')
     async def stop(self, ctx):
         if not ctx.voice_client:
             await ctx.send("You're not playing any music!")
@@ -61,20 +61,6 @@ class music(commands.Cog):
         
         await vc.stop()
         await ctx.send("successfuly stopped music")
-    
-    @commands.command()
-    async def volume(self, ctx, volume: int):
-        if not ctx.voice_client:
-            await ctx.send("You're not playing any music!")
-        elif not getattr(ctx.author.voice, "channel", None):
-            await ctx.send("You are not current connected to a voice channel!")
-        else:
-            vc = wavelink.Player = ctx.voice_client
-        
-        volume = volume / 1000
-        nextcord.PCMVolumeTransformer.volume(volume=volume)
-        await ctx.send("set volume to `{volume}`")
-        
     
 
 def setup(bot):
